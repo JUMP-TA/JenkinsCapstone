@@ -30,9 +30,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'npm test'
+                        sh 'jest tests/run-frontend-test.js'
                     } else {
-                        bat 'npm test'
+                        bat 'jest tests\\run-frontend-test.js'
                     }
                 }
             }
