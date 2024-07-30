@@ -4,7 +4,7 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-        AWS_DEFAULT_REGION = 'us-east1'
+        AWS_DEFAULT_REGION = 'us-east-1'
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
     }
 
@@ -74,7 +74,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
                         docker.image('my-app:latest').push('latest')
                     }
                 }
@@ -96,9 +96,7 @@ pipeline {
 
     post {
         always {
-            node('any') {
-                cleanWs()
-            }
+            cleanWs()
         }
     }
 }
