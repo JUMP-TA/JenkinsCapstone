@@ -39,18 +39,6 @@ pipeline {
             }
         }
 
-        stage('Build Application') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npm run build'
-                    } else {
-                        bat 'npm run build'
-                    }
-                }
-            }
-        }
-
         stage('Deploy to S3') {
             steps {
                 script {
@@ -74,7 +62,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
                         docker.image('my-app:latest').push('latest')
                     }
                 }
