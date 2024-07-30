@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/JUMP-TA/JenkinsCapstone.git'
+                git branch: 'main', url:  'https://github.com/JUMP-TA/JenkinsCapstone.git'
             }
         }
 

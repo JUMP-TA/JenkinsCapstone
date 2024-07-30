@@ -44,89 +44,15 @@ jenkinscapstone/
 ```
 
 #### Step 2: Create the Jenkinsfile
-In the root of the project directory, create a `Jenkinsfile` with the following content:
-
-**Jenkinsfile:**
-```groovy
-pipeline {
-    agent any
-
-    environment {
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-        AWS_DEFAULT_REGION = 'us-east-1'
-    }
-
-    stages {
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/JUMP-TA/JenkinsCapstone.git'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Run Back-end Tests') {
-            steps {
-                sh 'npm test'
-            }
-        }
-
-        stage('Run Front-end Tests') {
-            steps {
-                sh 'node tests/frontend.test.js'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build("jenkinscapstone:${env.BUILD_ID}")
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        dockerImage.push("${env.BUILD_ID}")
-                        dockerImage.push("latest")
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to S3') {
-            steps {
-                script {
-                    sh '''
-                    aws s3 sync . s3://jenkins-bucket --delete
-                    '''
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
-        }
-    }
-}
-```
+In the root of the project directory, create a `Jenkinsfile` like the one included here.
 
 #### Step 3: Configure AWS S3
-Ensure the S3 bucket `jenkins-bucket` is created and configured for static website hosting.
+Ensure the S3 bucket `jenkins-bucket-123` (or whatever name is available) is created and configured for static website hosting.
 
 1. **Create an S3 Bucket**:
    - Go to the S3 service in your AWS Management Console.
    - Click "Create bucket".
-   - Enter `jenkins-bucket` as the bucket name and select the region.
+   - Enter something like`jenkins-bucket-123` as the bucket name and select the region.
    - Click "Create bucket".
 
 2. **Configure S3 Bucket for Static Website Hosting**:
@@ -149,7 +75,7 @@ Ensure the S3 bucket `jenkins-bucket` is created and configured for static websi
          "Effect": "Allow",
          "Principal": "*",
          "Action": "s3:GetObject",
-         "Resource": "arn:aws:s3:::jenkins-bucket/*"
+         "Resource": "arn:aws:s3:::jenkins-bucket-123/*"
        }
      ]
    }
