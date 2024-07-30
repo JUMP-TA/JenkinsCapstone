@@ -7,3 +7,4 @@ try {
   console.error('Frontend tests failed');
   process.exit(1);
 }
+
