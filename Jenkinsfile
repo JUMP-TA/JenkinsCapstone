@@ -10,25 +10,43 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url:  'https://github.com/JUMP-TA/JenkinsCapstone.git'
+                git 'https://github.com/JUMP-TA/JenkinsCapstone.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                script {
+                    if (isUnix()) {
+                        sh 'npm install'
+                    } else {
+                        bat 'npm install'
+                    }
+                }
             }
         }
 
         stage('Run Back-end Tests') {
             steps {
-                sh 'npm test'
+                script {
+                    if (isUnix()) {
+                        sh 'npm test'
+                    } else {
+                        bat 'npm test'
+                    }
+                }
             }
         }
 
         stage('Run Front-end Tests') {
             steps {
-                sh 'node tests/frontend.test.js'
+                script {
+                    if (isUnix()) {
+                        sh 'node tests/frontend.test.js'
+                    } else {
+                        bat 'node tests/frontend.test.js'
+                    }
+                }
             }
         }
 
@@ -54,9 +72,15 @@ pipeline {
         stage('Deploy to S3') {
             steps {
                 script {
-                    sh '''
-                    aws s3 sync . s3://jenkins-bucket --delete
-                    '''
+                    if (isUnix()) {
+                        sh '''
+                        aws s3 sync . s3://jenkins-bucket --delete
+                        '''
+                    } else {
+                        bat '''
+                        aws s3 sync . s3://jenkins-bucket --delete
+                        '''
+                    }
                 }
             }
         }
@@ -68,3 +92,4 @@ pipeline {
         }
     }
 }
+
