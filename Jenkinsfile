@@ -40,11 +40,16 @@ pipeline {
 
         stage('Deploy to S3') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'aws s3 sync . s3://jenkins-bucket-123 --delete'
-                    } else {
-                        bat 'aws s3 sync . s3://jenkins-bucket-123 --delete'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding', 
+                    credentialsId: 'aws-access-key-id'
+                ]]) {
+                    script {
+                        if (isUnix()) {
+                            sh 'aws s3 sync . s3://jenkins-bucket-123 --delete'
+                        } else {
+                            bat 'aws s3 sync . s3://jenkins-bucket-123 --delete'
+                        }
                     }
                 }
             }
