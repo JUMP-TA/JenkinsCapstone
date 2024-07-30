@@ -90,7 +90,7 @@ pipeline {
 
     post {
         always {
-            node('master') { // Use 'master' for the local node
+            node {
                 cleanWs()
             }
         }
