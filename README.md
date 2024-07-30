@@ -14,7 +14,6 @@ jenkinscapstone/
 ├── style.css
 ├── app.js
 ├── tests/
-│   ├── app.test.js
 │   └── frontend.test.js
 ├── package.json
 └── package-lock.json

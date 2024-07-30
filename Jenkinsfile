@@ -26,25 +26,13 @@ pipeline {
             }
         }
 
-        stage('Run Back-end Tests') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npm run test:backend'
-                    } else {
-                        bat 'npm run test:backend'
-                    }
-                }
-            }
-        }
-
         stage('Run Front-end Tests') {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'npm run test:frontend'
+                        sh 'npm test'
                     } else {
-                        bat 'npm run test:frontend'
+                        bat 'npm test'
                     }
                 }
             }
