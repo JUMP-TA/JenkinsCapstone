@@ -28,6 +28,12 @@ pipeline {
             }
         }
 
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/JUMP-TA/JenkinsCapstone.git'
+            }
+        }
+
         stage('Run Front-end Tests') {
             steps {
                 script {
