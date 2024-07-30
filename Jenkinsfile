@@ -42,9 +42,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'node tests/frontend.test.js'
+                        sh 'npm run test:frontend'
                     } else {
-                        bat 'node tests/frontend.test.js'
+                        bat 'npm run test:frontend'
                     }
                 }
             }
@@ -74,11 +74,11 @@ pipeline {
                 script {
                     if (isUnix()) {
                         sh '''
-                        aws s3 sync . s3://jenkins-bucket --delete
+                        aws s3 sync . s3://jenkins-bucket-123 --delete
                         '''
                     } else {
                         bat '''
-                        aws s3 sync . s3://jenkins-bucket --delete
+                        aws s3 sync . s3://jenkins-bucket-123 --delete
                         '''
                     }
                 }

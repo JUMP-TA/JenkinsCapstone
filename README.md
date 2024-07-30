@@ -20,29 +20,6 @@ jenkinscapstone/
 └── package-lock.json
 ```
 
-**package.json:**
-```json
-{
-  "name": "jenkinscapstone",
-  "version": "1.0.0",
-  "description": "A simple Node.js web application",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "test": "jest"
-  },
-  "dependencies": {
-    "express": "^4.17.1"
-  },
-  "devDependencies": {
-    "jest": "^26.6.3",
-    "supertest": "^6.0.1",
-    "selenium-webdriver": "^4.0.0",
-    "chromedriver": "^91.0.1"
-  }
-}
-```
-
 #### Step 2: Create the Jenkinsfile
 In the root of the project directory, create a `Jenkinsfile` like the one included here.
 
