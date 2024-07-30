@@ -65,9 +65,13 @@ Ensure the S3 bucket `jenkins-bucket-123` (or whatever name is available) is cre
    - Blue Ocean
 
 2. **Set Up Credentials**:
-   - Store your AWS credentials in Jenkins as `aws-access-key-id` and `aws-secret-access-key`.
+   - Store your credentials in Jenkins as `aws-access-key-id` and `aws-secret-access-key`.
 
-3. **Create Pipeline Job**:
+3. **Install AWS CLI**:
+   - Ensure the AWS CLI is installed on the Jenkins server.
+   - You can install it by following the [AWS CLI installation guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html).
+
+4. **Create Pipeline Job**:
    - Go to Jenkins Dashboard > New Item > Pipeline.
    - Name your pipeline, select Pipeline, and click OK.
    - In the pipeline configuration, set the Pipeline script path to `Jenkinsfile`.
