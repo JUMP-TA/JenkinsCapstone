@@ -30,9 +30,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'npm test'
+                        sh 'npm run test:backend'
                     } else {
-                        bat 'npm test'
+                        bat 'npm run test:backend'
                     }
                 }
             }
@@ -92,4 +92,3 @@ pipeline {
         }
     }
 }
-

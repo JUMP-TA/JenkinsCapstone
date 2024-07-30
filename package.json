@@ -5,8 +5,12 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "jest tests/app.test.js",
+    "test": "jest",
+    "test:backend": "jest tests/app.test.js",
     "test:frontend": "node tests/frontend.test.js"
+  },
+  "jest": {
+    "testMatch": ["**/tests/**/*.test.js"]
   },
   "dependencies": {
     "express": "^4.17.1"
@@ -18,4 +22,3 @@
     "chromedriver": "^91.0.1"
   }
 }
-
