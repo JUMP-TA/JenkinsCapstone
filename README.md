@@ -59,7 +59,6 @@ Ensure the S3 bucket `jenkins-bucket-123` (or whatever name is available) is cre
 
 #### Step 4: Configure Jenkins
 1. **Install Required Plugins**:
-   - Docker Pipeline
    - Pipeline: AWS Steps
    - Git
    - NodeJS
@@ -67,7 +66,6 @@ Ensure the S3 bucket `jenkins-bucket-123` (or whatever name is available) is cre
 
 2. **Set Up Credentials**:
    - Store your AWS credentials in Jenkins as `aws-access-key-id` and `aws-secret-access-key`.
-   - Store your DockerHub credentials as `dockerhub-credentials`.
 
 3. **Create Pipeline Job**:
    - Go to Jenkins Dashboard > New Item > Pipeline.
