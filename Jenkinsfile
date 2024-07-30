@@ -90,7 +90,49 @@ pipeline {
 
     post {
         always {
-            node {
+            node {pipeline {
+    agent any
+    stages {
+        stage('Run Front-end Tests') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'npm test'
+                    } else {
+                        bat 'npm test'
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("${DOCKERHUB_USER}/jenkinscapstone:${env.BUILD_ID}")
+                }
+            }
+        }
+
+        stage('Deploy to S3') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'aws s3 sync . s3://jenkins-bucket-123 --delete'
+                    } else {
+                        bat 'aws s3 sync . s3://jenkins-bucket-123 --delete'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            node('master') { // Add the label parameter here
+                cleanWs()
+            }
+        }
+    }
+}
                 cleanWs()
             }
         }
