@@ -5,7 +5,6 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
         AWS_DEFAULT_REGION = 'us-east-1'
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
     }
 
     stages {
@@ -46,36 +45,6 @@ pipeline {
                         sh 'aws s3 sync . s3://jenkins-bucket-123 --delete'
                     } else {
                         bat 'aws s3 sync . s3://jenkins-bucket-123 --delete'
-                    }
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build('my-app:latest')
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                        docker.image('my-app:latest').push('latest')
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'kubectl apply -f k8s/deployment.yaml'
-                    } else {
-                        bat 'kubectl apply -f k8s/deployment.yaml'
                     }
                 }
             }
