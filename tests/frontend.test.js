@@ -1,21 +1,26 @@
-const { Builder, By, until } = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome');
+const puppeteer = require('puppeteer');
 
-(async function example() {
-  let driver = await new Builder()
-    .forBrowser('chrome')
-    .setChromeOptions(new chrome.Options().addArguments('--headless'))
-    .build();
-  try {
-    await driver.get('http://localhost:3000');
-    const initialTime = await driver.findElement(By.id('time')).getText();
-    await driver.sleep(2000); // Wait for 2 seconds to allow time update
-    const updatedTime = await driver.findElement(By.id('time')).getText();
-    if (initialTime === updatedTime) {
-      throw new Error('Time did not update');
-    }
-    console.log('Time updated successfully');
-  } finally {
-    await driver.quit();
-  }
-})();
+describe('Time Update Test', () => {
+  let browser;
+  let page;
+
+  beforeAll(async () => {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox']
+    });
+    page = await browser.newPage();
+    await page.goto('http://localhost:3000');
+  });
+
+  afterAll(async () => {
+    await browser.close();
+  });
+
+  it('should update the time every second', async () => {
+    const initialTime = await page.$eval('#time', el => el.textContent);
+    await page.waitForTimeout(2000); // Wait for 2 seconds to allow time update
+    const updatedTime = await page.$eval('#time', el => el.textContent);
+    expect(initialTime).not.toBe(updatedTime);
+  });
+});
