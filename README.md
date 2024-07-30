@@ -64,17 +64,13 @@ Ensure the S3 bucket `jenkins-bucket-123` (or whatever name is available) is cre
    - NodeJS
    - Blue Ocean
 
-2. **Set Up Credentials**:
-   - Open your Jenkins dashboard.
+2. **Add AWS Credentials**:
    - Go to Manage Jenkins > Manage Credentials.
    - Under Stores scoped to Jenkins, click on (global) > Add Credentials.
-   - Select Kind as Username with password.
-   - For Username, enter your AWS Access Key ID.
-   - For Password, enter your AWS Secret Access Key.
-   - Set an ID (e.g., `aws-access-key-id`) and a description for easy identification.
-   - Add another credential of type Secret text for the AWS Secret Access Key:
-     - For Secret, enter your AWS Secret Access Key.
-     - Set an ID (e.g., `aws-secret-access-key`) and a description.
+   - Select Kind as AWS Credentials.
+   - For Access Key ID, enter your AWS Access Key ID.
+   - For Secret Access Key, enter your AWS Secret Access Key.
+   - Set an ID (e.g., `aws-credentials`) and a description for easy identification.
 
 
 3. **Install AWS CLI**:
