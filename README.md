@@ -1,0 +1,187 @@
+# Deploying a Jenkins Pipeline to the Cloud
+
+This capstone project integrates several aspect of Jenkins Pipelines. You'll develop a CI/CD pipeline with automated testing using Jenkins and deploy it to AWS S3, providing hands-on experience with modern DevOps practices.
+
+#### Step 1: Ensure Project Structure and Dependencies
+Verify that the project structure includes the necessary files and directories, and that `package.json` has the required dependencies and scripts.
+
+**Project Structure:**
+```
+jenkinscapstone/
+├── Dockerfile
+├── index.html
+├── main.js
+├── style.css
+├── app.js
+├── tests/
+│   ├── app.test.js
+│   └── frontend.test.js
+├── package.json
+└── package-lock.json
+```
+
+**package.json:**
+```json
+{
+  "name": "jenkinscapstone",
+  "version": "1.0.0",
+  "description": "A simple Node.js web application",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "supertest": "^6.0.1",
+    "selenium-webdriver": "^4.0.0",
+    "chromedriver": "^91.0.1"
+  }
+}
+```
+
+#### Step 2: Create the Jenkinsfile
+In the root of the project directory, create a `Jenkinsfile` with the following content:
+
+**Jenkinsfile:**
+```groovy
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+        AWS_DEFAULT_REGION = 'us-east-1'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/JUMP-TA/JenkinsCapstone.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Back-end Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('Run Front-end Tests') {
+            steps {
+                sh 'node tests/frontend.test.js'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("jenkinscapstone:${env.BUILD_ID}")
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        dockerImage.push("${env.BUILD_ID}")
+                        dockerImage.push("latest")
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to S3') {
+            steps {
+                script {
+                    sh '''
+                    aws s3 sync . s3://jenkins-bucket --delete
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
+```
+
+#### Step 3: Configure AWS S3
+Ensure the S3 bucket `jenkins-bucket` is created and configured for static website hosting.
+
+1. **Create an S3 Bucket**:
+   - Go to the S3 service in your AWS Management Console.
+   - Click "Create bucket".
+   - Enter `jenkins-bucket` as the bucket name and select the region.
+   - Click "Create bucket".
+
+2. **Configure S3 Bucket for Static Website Hosting**:
+   - Select your newly created bucket.
+   - Go to the "Properties" tab.
+   - Scroll down to "Static website hosting" and click "Edit".
+   - Enable static website hosting.
+   - Set "index.html" as the index document.
+   - Click "Save changes".
+
+3. **Update S3 Bucket Permissions**:
+   - Go to the "Permissions" tab.
+   - Edit the bucket policy to allow public access:
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [
+       {
+         "Sid": "PublicReadGetObject",
+         "Effect": "Allow",
+         "Principal": "*",
+         "Action": "s3:GetObject",
+         "Resource": "arn:aws:s3:::jenkins-bucket/*"
+       }
+     ]
+   }
+   ```
+
+#### Step 4: Configure Jenkins
+1. **Install Required Plugins**:
+   - Docker Pipeline
+   - Pipeline: AWS Steps
+   - Git
+   - NodeJS
+   - Blue Ocean
+
+2. **Set Up Credentials**:
+   - Store your AWS credentials in Jenkins as `aws-access-key-id` and `aws-secret-access-key`.
+   - Store your DockerHub credentials as `dockerhub-credentials`.
+
+3. **Create Pipeline Job**:
+   - Go to Jenkins Dashboard > New Item > Pipeline.
+   - Name your pipeline, select Pipeline, and click OK.
+   - In the pipeline configuration, set the Pipeline script path to `Jenkinsfile`.
+
+#### Step 5: Run the Pipeline
+1. **Trigger the Pipeline**:
+   - Manually trigger the pipeline by clicking "Build Now" in Jenkins.
+
+2. **Monitor the Pipeline**:
+   - Use the Jenkins Blue Ocean interface to monitor the pipeline stages.
+
+#### Step 6: Verify the Deployment
+1. **AWS S3**:
+   - Go to your AWS S3 dashboard to verify the files have been uploaded to your bucket.
+
+2. **Access the Application**:
+   - Use the S3 bucket static website URL to access your application and verify everything is working.
