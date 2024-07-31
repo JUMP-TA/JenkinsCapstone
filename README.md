@@ -8,7 +8,6 @@ Verify that the project structure includes the necessary files and directories, 
 **Project Structure:**
 ```
 jenkinscapstone/
-├── Dockerfile
 ├── index.html
 ├── main.js
 ├── style.css
