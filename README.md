@@ -1,6 +1,6 @@
 # Deploying a Jenkins Pipeline to the Cloud
 
-This capstone project integrates several aspect of Jenkins Pipelines. You'll develop a CI/CD pipeline with automated testing using Jenkins and deploy it to AWS S3, providing hands-on experience with modern DevOps practices.
+This capstone project integrates several aspects of Jenkins Pipelines. You'll develop a CI/CD pipeline with automated testing using Jenkins and deploy it to AWS S3, providing hands-on experience with modern DevOps practices.
 
 #### Step 1: Ensure Project Structure and Dependencies
 Verify that the project structure includes the necessary files and directories, and that `package.json` has the required dependencies and scripts.
